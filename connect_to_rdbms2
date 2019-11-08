@@ -1,0 +1,10 @@
+from pandas as pd
+from sqlalchemy import create_engine
+
+sql = "SELECT * FROM EMPLOYEE"
+connection_string = "----db_connection_strinig----"
+engine = create_engine(connection_string)
+
+# it takes care of connecting to DB and return resultset 
+df = pd.read_sql_query(sql,engine)
+print(df.head())
