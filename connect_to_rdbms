@@ -1,0 +1,27 @@
+#import python packages 
+from pandas as pd
+from sqlalchemy import create_engine
+
+# create engine. 
+connection_string ="....fill-in-your-db-connection-string....."
+engine = create_engine(connection_string)
+table_names = engine.table_names()
+print(table_names[0:4])
+
+#connect to database
+con = engine.connect()
+
+# execute/run the SQL statement and it returns resultset 
+rs = con.execute('SELECT LastName, FirstName FROM Employee')
+
+# create dataframe using result set (rs)
+df = pd.DataFrame(rs.fetchmany(size=5))
+
+# set dataframe columns name
+df.columns = rs.keys()
+
+# close database connection 
+con.close()
+
+# print dataframe's first 5 lines. 
+print(df.head())
