@@ -1,0 +1,41 @@
+# This is just to make plots appear in the notebook
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# Import our plotting module, and PCA class
+from sklearn.decomposition import PCA
+
+#Technique-1: Based on feature variance:
+#---------------------------------------------
+
+# Get our explained variance ratios from PCA using all features
+pca = PCA()
+pca.fit(train_features)
+exp_variance = pca.explained_variance_ratio_
+
+# plot the explained variance using a barplot
+fig, ax = plt.subplots()
+ax.bar(range(8), exp_variance)
+ax.set_xlabel('Principal Component #')
+
+# Technique-2: Based on cumulative explained variance plot ( > 90%) 
+#---------------------------------------------------------------------
+# sometime. there may not be clear elbow in the scree plot (technique-1), which means it is not straightforward to find the number of intrinsic dimensions using this method. 
+# But all is not lost! Instead, we can also look at the cumulative explained variance plot to determine how many features are required to explain, say, about 90% of the variance.
+
+# Import numpy
+import numpy as np
+
+# Calculate the cumulative explained variance
+cum_exp_variance = np.cumsum(pca.explained_variance_ratio_)
+
+# Plot the cumulative explained variance and draw a dashed line at 0.90.
+fig, ax = plt.subplots()
+ax.plot(cum_exp_variance)
+ax.axhline(y=0.9, linestyle='--')
+n_components = 6   # Based on cumulative explained variance plt.  At 6th feature, 90% of the cumulative variance starts.
+
+# Perform PCA with the chosen number of components and project data onto components
+pca = PCA(n_components, random_state=10)
+pca.fit(scaled_train_features)
+pca_projection = pca.transform(scaled_train_features)
